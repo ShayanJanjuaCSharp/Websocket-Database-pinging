@@ -1,45 +1,26 @@
-var http = require('http');
-var WebSocketServer = require('websocket').server;
+ const http = require('http');
+const { measureMemory } = require('vm');
+ const WebSocket = require('ws');
 
-var server = http.createServer(function(request, res){
-    console.log((new Date()) + 'Recieved request for ' + request.url);
-    res.writeHead(404);
-    res.end();
+ const port = 8080;
+ const server = http.createServer();
+ const wss = new WebSocket.Server({ server });
+
+ const users = new Map();
+
+ wss.on('connection', function connection(ws) {
+   ws.on('message', function incoming(message) {
+      const messageComp = message.split(',');
+      const userId = messageComp[0];
+      const targetId = messageComp[1];
+      users.set(userId, client);
+      wss.clients[targetId].send(message);
+   });
+   ws.on('close', function close() {
+    console.log('Lost Connection');
+   });
 });
-server.listen(8080, function(){
-    console.log((new Date()) + ' Server is listening on port 8080');
-});
 
-ws = new WebSocketServer({
-    httpServer: server,
-    autoAcceptConnections: false
-});
-
-function originIsAllowed(origin){
-    return true;
-}
-
-ws.on('request', function(req){
-    if(!originIsAllowed(req.origin)){
-        req.reject();
-        console.log((new Date()) + ' Connection from origin ' + req.origin + ' rejected.')
-    }
-
-    var con = req.accept('echo-protocol', req.origin);
-    console.log((new Date()) + ' Connection accepted.');
-
-    con.on('message', function(message){
-        if(message.type === 'utf8'){
-            console.log('Received Message: ' + message.utf8Data);
-            con.sendUTF(message.utf8Data);
-        }
-        else if (message.type === 'binary'){
-            console.log('Recieved Binary Message of ' + message.binaryData.length + ' bytes');
-            con.sendBytes(message.binaryData)
-        }
-    });
-    con.on('close', function(reasonCode, desc){
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-    });
-
-});
+server.listen(port, function listening() {
+   console.log('Listening on %d', server.address().port);
+})
