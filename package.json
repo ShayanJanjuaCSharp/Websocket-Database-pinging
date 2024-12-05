@@ -1,4 +1,5 @@
 {
+  "start" : "node server.js",
   "dependencies": {
     "run": "^1.5.0",
     "websocket": "^1.0.35",
