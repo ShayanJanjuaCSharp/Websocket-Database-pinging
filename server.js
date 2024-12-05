@@ -2,7 +2,7 @@ const http = require('http');
 const { measureMemory } = require('vm');
 const WebSocket = require('ws');
 
-const port = 8080;
+const PORT = process.env.PORT || 8080;
 const server = http.createServer();
 const wss = new WebSocket.Server({ server });
 
@@ -38,6 +38,6 @@ wss.on('connection', function connection(client) {
     });
 });
 
-server.listen(port, '0.0.0.0', function listening() {
-    console.log('Listening on %d', server.address().port);
-})
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is listening on port ${PORT}`);  
+});
