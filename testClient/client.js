@@ -6,7 +6,8 @@ if(ws){
 
 ws = new WebSocket('ws://localhost:8080');
 ws.onopen = () => {
-    console.log('conn open');
+    console.log('Connection Open.');
+    ws.send('Hello,what');
 }
 
 ws.onmessage = (msg) => {
