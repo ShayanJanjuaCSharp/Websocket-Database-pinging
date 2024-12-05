@@ -38,6 +38,6 @@ wss.on('connection', function connection(client) {
     });
 });
 
-server.listen(port, function listening() {
+server.listen(port, '0.0.0.0', function listening() {
     console.log('Listening on %d', server.address().port);
 })
